@@ -34,33 +34,13 @@ app.use(
 
 
 // ============================================================
-// HOME / SERVER CHECK
+// SERVE WEATHER DASHBOARD FRONTEND
 // ============================================================
 
+app.use(express.static(__dirname));
+
 app.get("/", (req, res) => {
-
-    res.json({
-
-        success: true,
-
-        message:
-            "Weather Dashboard Backend is running",
-
-        endpoints: {
-
-            weather:
-                "/api/weather?lat=12.9716&lon=77.5946",
-
-            forecast:
-                "/api/forecast?lat=12.9716&lon=77.5946",
-
-            search:
-                "/api/search?q=bengaluru"
-
-        }
-
-    });
-
+    res.sendFile(__dirname + "/index.html");
 });
 
 
