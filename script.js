@@ -1,7 +1,7 @@
 /* =========================================================
    WEATHER DASHBOARD
    Frontend JavaScript
-   Backend: http://localhost:3000
+   Backend: Same Render server
 ========================================================= */
 
 
@@ -9,7 +9,7 @@
    CONFIGURATION
 ========================================================= */
 
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "";
 
 
 /* =========================================================
@@ -389,7 +389,9 @@ async function loadCurrentWeather(latitude, longitude) {
     if (!data.success) {
 
         throw new Error(
-            data.message || "Unable to get weather data."
+            data.message ||
+            data.error ||
+            "Unable to get weather data."
         );
     }
 
@@ -519,7 +521,7 @@ function updateCurrentWeather(data) {
         const value =
             Number(current.visibility);
 
-        let visibilityKm =
+        const visibilityKm =
             value / 1000;
 
         visibility.textContent =
@@ -578,12 +580,17 @@ function updateCurrentWeather(data) {
 
 async function loadForecast(latitude, longitude) {
 
-    console.log("Loading 7-day forecast...");
+    console.log(
+        "Loading 7-day forecast..."
+    );
 
     const url =
         `${API_BASE_URL}/api/forecast?lat=${encodeURIComponent(latitude)}&lon=${encodeURIComponent(longitude)}`;
 
-    console.log("Forecast API:", url);
+    console.log(
+        "Forecast API:",
+        url
+    );
 
     const response =
         await fetch(url);
@@ -598,12 +605,16 @@ async function loadForecast(latitude, longitude) {
     const data =
         await response.json();
 
-    console.log("Forecast response:", data);
+    console.log(
+        "Forecast response:",
+        data
+    );
 
     if (!data.success) {
 
         throw new Error(
             data.message ||
+            data.error ||
             "Unable to get forecast data."
         );
     }
@@ -772,6 +783,7 @@ async function loadWeather(
             "Weather loaded successfully."
         );
 
+
         /* Scroll to weather section */
 
         if (weatherSection) {
@@ -801,7 +813,7 @@ async function loadWeather(
         );
 
         showError(
-            "Unable to load weather data. Please check that the backend server is running."
+            "Unable to load weather data. Please try again."
         );
     }
 }
@@ -874,6 +886,7 @@ async function searchLocation() {
 
             throw new Error(
                 data.message ||
+                data.error ||
                 "Location search failed."
             );
         }
@@ -1192,12 +1205,6 @@ function getUserLocation() {
 
 
             try {
-
-                /*
-                 * We use the coordinates directly.
-                 * The backend weather API works with
-                 * latitude and longitude.
-                 */
 
                 await loadWeather(
                     latitude,
